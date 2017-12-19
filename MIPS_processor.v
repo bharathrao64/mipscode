@@ -24,7 +24,40 @@ module CPU (clock,PC,IFID_IR,IDEX_IR,EXMEM_IR,MEMWB_IR,WD);
 
   input clock;
   output [31:0] PC,IFID_IR,IDEX_IR,EXMEM_IR,MEMWB_IR,WD;
+	
+	reg [31:0] IMemory[0:1023];
+	reg [31:0] DMemory[0:1023]; 
 
+initial begin 
+	// Program: swap memory cells (if needed) and compute absolute value |4-7|=3
+   IMemory[0]  = 32'h8c080000;  // lw $8, 0($0)
+   IMemory[1]  = 32'h8c090004;  // lw $9, 4($0)
+   IMemory[2]  = 32'h00000000;  // nop
+   IMemory[3]  = 32'h00000000;  // nop
+   IMemory[4]  = 32'h00000000;  // nop
+   IMemory[5]  = 32'h0109502a;  // slt $10, $8, $9
+   IMemory[6]  = 32'h00000000;  // nop
+   IMemory[7]  = 32'h00000000;  // nop
+   IMemory[8]  = 32'h00000000;  // nop
+   IMemory[9]  = 32'h11400005;  // beq $10, $0, IMemory[15]  
+   IMemory[10] = 32'h00000000;  // nop
+   IMemory[11] = 32'h00000000;  // nop
+   IMemory[12] = 32'h00000000;  // nop
+   IMemory[13] = 32'hac080004;  // sw $8, 4($0)
+   IMemory[14] = 32'hac090000;  // sw $9, 0($0)
+   IMemory[15] = 32'h00000000;  // nop
+   IMemory[16] = 32'h00000000;  // nop
+   IMemory[17] = 32'h00000000;  // nop
+   IMemory[18] = 32'h8c080000;  // lw $8, 0($0)
+   IMemory[19] = 32'h8c090004;  // lw $9, 4($0)
+   IMemory[20] = 32'h00000000;  // nop
+   IMemory[21] = 32'h00000000;  // nop
+   IMemory[22] = 32'h00000000;  // nop
+   IMemory[23] = 32'h01095022;  // sub $10, $8, $9
+// Data
+	DMemory [0] = 32'h4; // switch the cells and see how the simulation output changes
+	DMemory [1] = 32'h7; // (beq is taken if [0]=32'h7; [1]=32'h4, not taken otherwise)
+  end
 
 // Pipeline 
 
